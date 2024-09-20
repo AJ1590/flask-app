@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Metadata Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>YouTube Metadata Generator</h1>
+
+    <form id="yt-form">
+        <label for="youtube_url">YouTube URL:</label>
+        <input type="text" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=example" required><br><br>
+        <button type="submit">Generate Metadata</button>
+    </form>
+
+    <div id="output" style="display:none;">
+        <h2>Generated Metadata:</h2>
+        <pre id="gpt-output"></pre>
+    </div>
+
+    <script>
+        $('#yt-form').on('submit', function(event) {
+            event.preventDefault();
+            
+            let youtubeUrl = $('#youtube_url').val();
+
+            $.ajax({
+                url: '/generate',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ youtube_url: youtubeUrl }),
+                success: function(response) {
+                    if (response.success) {
+                        $('#gpt-output').text(response.gpt_output);
+                        $('#output').show();
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
